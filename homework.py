@@ -80,3 +80,5 @@ class CashCalculator(Calculator):
             return ('Денег нет, держись: твой долг - '
                     f'{balance_in_currency}'
                     f'{phrase}')
+
+        

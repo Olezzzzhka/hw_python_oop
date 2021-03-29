@@ -1,4 +1,5 @@
 import datetime as dt
+from datetime import date
 from typing import Dict, List, Optional, Tuple, Union
 
 
@@ -18,7 +19,8 @@ class Record:
 class Calculator:
     def __init__(self, limit: Union[float, int]) -> None:
         self.limit = limit
-        self.records: List[Tuple[Union[float, int], str, Optional[None]]] = []
+        annotation = List[Tuple[Union[float, int], str, Optional[None]]]
+        self.records: annotation = []
 
     def add_record(self,
                    record: Tuple[Union[float, int], str,
@@ -31,17 +33,16 @@ class Calculator:
                    == present_day)
 
     def get_today_remained(self) -> Union[int, float]:
-        return(self.limit - self.get_today_stats())
+        return self.limit - self.get_today_stats()
 
     def get_week_stats(self) -> Union[int, float]:
         time_interval = dt.timedelta(days=7)
-        week = dt.datetime.now() - time_interval
+        nowday = dt.date.today()
+        week = nowday - time_interval
         amount_week: Union[int, float] = 0
-        for record in self.records:
-            if dt.datetime.now().date() >= record.date > week.date():
-                amount_week += record.amount
-            else:
-                pass
+        amount_week = sum(
+                          record.amount for record in self.records
+                          if nowday >= record.date > week)
         return amount_week
 
 
@@ -64,18 +65,22 @@ class CashCalculator(Calculator):
         rates: Dict[str, Tuple[float, str]] = {
             'rub': [self.RUB_RATE, ' руб'],
             'eur': [self.EURO_RATE, ' Euro'],
-            'usd': [self.USD_RATE, ' USD']}
+            'usd': [self.USD_RATE, ' USD']
+            }
         remainder = self.get_today_remained()
-        rate = rates[currency][0]
-        phrase = rates[currency][1]
-        balance_in_currency = abs(round(remainder / rate, 2))
         if remainder == 0:
             return 'Денег нет, держись'
         elif remainder > 0:
+            rate = rates[currency][0]
+            phrase = rates[currency][1]
+            balance_in_currency = abs(round(remainder / rate, 2))
             return ('На сегодня осталось '
                     f'{balance_in_currency}'
                     f'{phrase}')
         else:
+            rate = rates[currency][0]
+            phrase = rates[currency][1]
+            balance_in_currency = abs(round(remainder / rate, 2))
             return ('Денег нет, держись: твой долг - '
                     f'{balance_in_currency}'
                     f'{phrase}')

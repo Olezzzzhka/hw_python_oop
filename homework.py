@@ -63,8 +63,7 @@ class CashCalculator(Calculator):
         rates: Dict[str, Tuple[float, str]] = {
             'rub': [self.RUB_RATE, ' руб'],
             'eur': [self.EURO_RATE, ' Euro'],
-            'usd': [self.USD_RATE, ' USD']
-            }
+            'usd': [self.USD_RATE, ' USD']}
         remainder = self.get_today_remained()
         if remainder == 0:
             return 'Денег нет, держись'

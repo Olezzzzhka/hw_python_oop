@@ -39,8 +39,7 @@ class Calculator:
         nowday = dt.date.today()
         week = nowday - time_interval
         amount_week: Union[int, float] = 0
-        amount_week = sum(
-                          record.amount for record in self.records
+        amount_week = sum(record.amount for record in self.records
                           if nowday >= record.date > week)
         return amount_week
 
